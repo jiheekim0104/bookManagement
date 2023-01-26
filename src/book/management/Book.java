@@ -6,8 +6,7 @@ public class Book {
 	public String position;
 	public int cnt; // 빌려간 누적수
 	public String state;
-	public int date;
-	public String msg;
+	public int date; // 빌려간 날짜
 	public int duplicateNumber;
 	
 	
@@ -20,14 +19,13 @@ public class Book {
 		
 		
 	}
-	public Book(String name, String author, String position, int cnt, String state,int date,String msg) { //여긴 대출 불가능 책
+	public Book(String name, String author, String position, int cnt, String state,int date) { //여긴 대출 불가능 책
 		this.name=name;
 		this.author=author;
 		this.position=position;
 		this.cnt =cnt;
 		this.state=state;
 		this.date=date;
-		this.msg=msg;
 		
 	}
 	public Book(Book book) {
@@ -37,7 +35,6 @@ public class Book {
 		this.cnt =book.cnt;
 		this.state=book.state;
 		this.date=book.date;
-		this.msg=book.msg;
 		this.duplicateNumber=book.duplicateNumber;
 	}
 }
