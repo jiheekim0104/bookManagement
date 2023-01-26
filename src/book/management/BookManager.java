@@ -10,11 +10,11 @@ public class BookManager {
 	private static final String[] ID = { "김지희", "박정은", "이수지" };
 	private static final String[] PASSWORD = { "0104", "1111", "2222" };
 
-	private Book[] books; // 책들을 배열로 관리함
-	private int bookSize;
+	private Book[] books; // 책들을 배열로 관리함, 책장같은 개념!
+	private int bookSize; // 가지고있는 책 수
 
-	private Member[] members;
-	private int memberSize;
+	private Member[] members; // 멤버들을 배열로 관리함,회원장부같은 개념!
+	private int memberSize; // 가지고있는 회원 수
 	Scanner sc;
 	LocalDate now;
 
@@ -23,7 +23,6 @@ public class BookManager {
 		this.bookSize = 0;// 프로그램상에 입력되어 가지고있는 책의 수, 초기 0
 		this.members = new Member[MEMBER_ADD_SIZE]; // 프로그램에 저장할수있는 총 회원수로 멤버 배열 초기값 할당
 		this.memberSize = 0;// 프로그램상에 입력되어 가지고있는 회원의 수, 초기 0
-		sc = new Scanner(System.in);
 	}
 
 	public int login() { // 사서 계정 & 비번 입력받고 맞으면 TRUE 리턴, 아아디 틀리면 -1, 비번 틀리면 -2 리턴하여 로그인 결과가 음수인경우 로그인 실패
@@ -32,21 +31,21 @@ public class BookManager {
 		System.out.print("PASSWORD: ");
 		String password = sc.nextLine();
 
-		int index = -1;
-		for (int i = 0; i < ID.length; i++) {
+		int index = -1; 
+		for (int i = 0; i < ID.length; i++) { // 맞으면 해당 인덱스를 리턴, 0:김지희, 1:박정은, 2:이수지
 			if (id.equals(ID[i])) {
 				index = i;
 			}
 		}
 		if (index < 0)
-			return -1;
-		if (password.equals(PASSWORD[index]))
+			return -1; // 아이디가 틀리면 -1 리턴
+		if (password.equals(PASSWORD[index])) // 아이디에 해당하는 인덱스를 비밀번호 인덱스랑 대조하여 맞으면 해당 인덱스 리턴
 			return index;
-		return -2;
+		return -2; // 아이디에 해당하는 인덱스랑 비교해서 비밀번호가 틀리면 -2 리턴
 	}
 
 	public void init() {
-		// 초기 책 넣기 (책이름,작가,위치,누적대여수,대출상태)
+		// 초기 책 넣기 (책이름,작가,위치,누적대여수,대출상태) 또는  (책이름,작가,위치,누적대여수,대출중 ~~~) 이렇게 두가지 형태임
 		add(new Book("봄봄", "김유정", "바.1.11", 1, "대출중(손석구/1월", 18, "일 반납예정)"));
 		add(new Book("봄봄", "김유정", "바.1.12", 2, "대출중(이나연/1월", 20, "일 반납예정)"));
 		add(new Book("봄봄", "김유정", "바.1.13", 1, "대출가능"));
@@ -56,7 +55,7 @@ public class BookManager {
 		// ...
 		// ...
 
-		// 초기 회원 넣기(회원명)
+		// 초기 회원 넣기(회원명,미납횟수(msg),미납횟수 숫자)
 		add(new Member("손석구", "미납횟수: ", 1));
 		add(new Member("장원영", "미납횟수: ", 0));
 		add(new Member("박연진", "미납횟수: ", 5));
@@ -68,17 +67,17 @@ public class BookManager {
 
 	}
 
-	private int getBookCount(String bookName) {
-		int count = 0;
-		for (int i = 0; i < bookSize; ++i)
-			if (books[i].name.equals(bookName))
-				count++; // 검색한 책과 이름이 같은게있는지 찾아서 갯수를 카운팅함
-		return count;
+	private int getBookCount(String bookName) { // 파라미터로 받아온 책 이름과 같은게있는지 카운팅하는 메소드
+		int count = 0; // 카운팅 초기값은 0
+		for (int i = 0; i < bookSize; ++i) // 책장에 담겨있는 책들을 인덱스 0부터 끝까지 찾아봄 
+			if (books[i].name.equals(bookName)) // 해당 인덱스를 가지는 책 이름이 파라미터로 받아온 책이름과 같다면
+				count++; // 카운팅 추가
+		return count; // 카운팅값 리턴
 	}
 	
-	public Book[] findBook(String bookName) { // 같은 책 찾기
-		int count = getBookCount(bookName);
-		Book[] books = new Book[count];
+	public Book[] findBook(String bookName) { // 파라미터로 받아온 책이 있는지 찾아보는 메소드
+		int count = getBookCount(bookName); // 위에있는 getBookCount를 통해 찾아보려는 책이 기존 책장에 몇권이있는지 그 수를 받아옴
+		Book[] books = new Book[count]; // 그 수를 가지고 배열을 생성함
 
 		int index = 0;
 		for (int i = 0; i < bookSize; ++i) {
