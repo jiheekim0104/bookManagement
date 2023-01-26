@@ -13,16 +13,17 @@ public class Book {
 	
 	public Book(String name, String author, String position, int cnt,String state) {
 		this.name=name;
-		this.position=position;
 		this.author=author;
-		this.state=state;
+		this.position=position;
 		this.cnt =cnt;
+		this.state=state;
+		
 		
 	}
 	public Book(String name, String author, String position, int cnt, String state,int date,String msg) {
 		this.name=name;
-		this.position=position;
 		this.author=author;
+		this.position=position;
 		this.cnt =cnt;
 		this.state=state;
 		this.date=date;

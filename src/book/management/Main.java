@@ -9,12 +9,9 @@ public class Main {
 		
 		BookManager bookManager = new BookManager();
 		int managerIndex = bookManager.login();
-		if(managerIndex>=0) {
-			//데이터 초기화, 기본책정보 입력, 회원정보 입력
-			bookManager.init();
-			
-			//실행
-			bookManager.run(managerIndex);			
+		if(managerIndex>=0) {			
+			bookManager.init(); //데이터 초기화, 기본책정보 입력, 회원정보 입력
+			bookManager.run(managerIndex);	//실행		
 		} else {
 			System.out.println("로그인 실패");
 		}

@@ -20,13 +20,13 @@ public class BookManager {
 
 	public BookManager() {
 		this.books = new Book[BOOK_ADD_SIZE]; // 도서관에서 보관할수있는 총 책의 권수로 책 배열 초기값 할당
-		this.bookSize = 0;// 프로그램상에 입력되어 가지고있는 책의 수를 표현하는 변수, 초기에는 책이 없으니 0으로 할당
+		this.bookSize = 0;// 프로그램상에 입력되어 가지고있는 책의 수, 초기 0
 		this.members = new Member[MEMBER_ADD_SIZE]; // 프로그램에 저장할수있는 총 회원수로 멤버 배열 초기값 할당
-		this.memberSize = 0;// 프로그램상에 입력되어 가지고있는 회원의 수를 표현하는 변수, 초기에는 회원이 없으니 0으로 할당
+		this.memberSize = 0;// 프로그램상에 입력되어 가지고있는 회원의 수, 초기 0
 		sc = new Scanner(System.in);
 	}
 
-	public int login() { // 사서 계정 & 비번 입력받고 맞으면 TRUE 리턴
+	public int login() { // 사서 계정 & 비번 입력받고 맞으면 TRUE 리턴, 아아디 틀리면 -1, 비번 틀리면 -2 리턴하여 로그인 결과가 음수인경우 로그인 실패
 		System.out.print("ID: ");
 		String id = sc.nextLine();
 		System.out.print("PASSWORD: ");
@@ -46,7 +46,7 @@ public class BookManager {
 	}
 
 	public void init() {
-		// 초기 책 넣기 (책이름,작가,위치,대출상태)
+		// 초기 책 넣기 (책이름,작가,위치,누적대여수,대출상태)
 		add(new Book("봄봄", "김유정", "바.1.11", 1, "대출중(손석구/1월", 18, "일 반납예정)"));
 		add(new Book("봄봄", "김유정", "바.1.12", 2, "대출중(이나연/1월", 20, "일 반납예정)"));
 		add(new Book("봄봄", "김유정", "바.1.13", 1, "대출가능"));
@@ -68,8 +68,29 @@ public class BookManager {
 
 	}
 
+	private int getBookCount(String bookName) {
+		int count = 0;
+		for (int i = 0; i < bookSize; ++i)
+			if (books[i].name.equals(bookName))
+				count++; // 검색한 책과 이름이 같은게있는지 찾아서 갯수를 카운팅함
+		return count;
+	}
+	
+	public Book[] findBook(String bookName) { // 같은 책 찾기
+		int count = getBookCount(bookName);
+		Book[] books = new Book[count];
+
+		int index = 0;
+		for (int i = 0; i < bookSize; ++i) {
+			if (this.books[i].name.equals(bookName))
+				books[index++] = this.books[i];
+		}
+		return books;
+
+	}
+	
 	public void add(Book book) {
-		Book[] olds = findBook(book.name);
+		Book[] olds = findBook(book.name); //같은 책이있는지 찾아봄, 없으면 빈 배열이됨. --> 바로 추가 & 배열내용이 있다면 배열길이에따라 중복수 부여
 		if (olds.length > 0) {
 			book.duplicateNumber = olds.length + 1;
 			if (olds.length == 1)
@@ -83,6 +104,27 @@ public class BookManager {
 		books[bookSize++] = book;
 	}
 
+	private int getMemberCount(String name) {
+		int count = 0;
+		for (int i = 0; i < memberSize; ++i)
+			if (members[i].name.equals(name))
+				count++;
+		return count;
+	}
+	
+	public Member[] findMember(String name) { // 멤버 찾기, 위에 책 찾기와 방식이 같음. 도전!!
+		int count = getMemberCount(name);
+		Member[] members = new Member[count];
+
+		int index = 0;
+		for (int i = 0; i < memberSize; ++i) {
+			if (this.members[i].name.equals(name))
+				members[index++] = this.members[i];
+		}
+		return members;
+
+	}
+	
 	public void add(Member member) {
 		Member[] oldsmembers = findMember(member.name);
 		if (oldsmembers.length > 0) {
@@ -97,53 +139,9 @@ public class BookManager {
 		}
 		members[memberSize++] = member;
 	}
-
-	public Book[] findBook(String bookName) { // 책 찾기, (String name)이 검색할 책 제목이 되어야함! 여기서 아직 이용 안했기때문에 추가 작업해야됨.
-		int count = getBookCount(bookName);
-		Book[] books = new Book[count];
-
-		int index = 0;
-		for (int i = 0; i < bookSize; ++i) {
-			if (this.books[i].name.equals(bookName))
-				books[index++] = this.books[i];
-		}
-		return books;
-
-	}
-
-	public Member[] findMember(String name) { // 멤버 찾기, 위에 책 찾기와 방식이 같음. 도전!!
-		int count = getMemberCount(name);
-		Member[] members = new Member[count];
-
-		int index = 0;
-		for (int i = 0; i < memberSize; ++i) {
-			if (this.members[i].name.equals(name))
-				members[index++] = this.members[i];
-		}
-		return members;
-
-	}
-
-	private int getBookCount(String bookName) {
-		int count = 0;
-		for (int i = 0; i < bookSize; ++i)
-			if (books[i].name.equals(bookName))
-				count++; // 검색한 책과 이름이 같은게있는지 찾아보고, 있으면 책 제목 리턴받아옴
-		return count; // 같은게 없으면 리턴 값이 없음
-	}
-
-	private int getMemberCount(String name) {
-		int count = 0;
-		for (int i = 0; i < memberSize; ++i)
-			if (members[i].name.equals(name))
-				count++;
-		return count;
-	}
-
-
+	 
 
 	public void run(int managerIndex) {
-		// 반복문 이용해서 메뉴 출력, 번호 입력하면 해당 내용을 실행될수있도록 작업해줘야함!
 		System.out.println(ID[managerIndex] + "사서님 환영합니다.");
 		now = LocalDate.now();
 		int month = now.getMonthValue();
@@ -176,14 +174,10 @@ public class BookManager {
 						for (Book book : books) {
 							if (!book.state.equals("대출가능")) {
 								System.out.println(
-										(book.duplicateNumber > 0 ? book.name + "(" + book.duplicateNumber + ")"
-												: book.name) + "[" + book.author + "] / " + book.position + " / "
-												+ book.state + " " + book.date + book.msg);
+										(book.duplicateNumber > 0 ? book.name + "(" + book.duplicateNumber + ")": book.name) + "[" + book.author + "] / " + book.position + " / "+ book.state + " " + book.date + book.msg);
 							} else {
 								System.out.println(
-										(book.duplicateNumber > 0 ? book.name + "(" + book.duplicateNumber + ")"
-												: book.name) + "[" + book.author + "] / " + book.position + " / "
-												+ book.state);
+										(book.duplicateNumber > 0 ? book.name + "(" + book.duplicateNumber + ")": book.name) + "[" + book.author + "] / " + book.position + " / "+ book.state);
 							}
 						}
 					}
@@ -223,6 +217,7 @@ public class BookManager {
 					}
 				}
 				break;
+				
 			case "4":
 				for (int i = 0; i < bookSize; i++) {
 					if (!(this.books[i].state).equals("대출가능")) {
@@ -237,7 +232,8 @@ public class BookManager {
 
 				break;
 
-			case "5": // 이 기능을쓰려면 책을 최소 책을 빌리는 기능이 필요 -> 빌린 기록 누적 -> 해당기간동안 누적순위 확인
+			case "5": 
+				// 이 기능을쓰려면 책을 최소 책을 빌리는 기능이 필요 -> 빌린 기록 누적 -> 해당기간동안 누적순위 확인
 				// 오늘날짜 -7부터 -1까지 누적 대여한 카운팅 순위로 출력, 이름이 같은경우에는 합산
 				Book[] collectedBooks = new Book[bookSize];
 				int collectedBookIndex = 0;
