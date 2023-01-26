@@ -219,6 +219,7 @@ public class BookManager {
 				break;
 				
 			case "4":
+				System.out.println("오늘은 " + month + "월 " + today + "일 대출기한을 넘긴 목록입니다.");
 				for (int i = 0; i < bookSize; i++) {
 					if (!(this.books[i].state).equals("대출가능")) {
 						now = LocalDate.now();
